@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            setContentView(R.layout.slides_layout);
-            /*btnLogout =findViewById(R.id.logout);
+            setContentView(R.layout.test);
+            btnLogout =findViewById(R.id.logout);
             btnLogout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-            });*/
-            /*Intent intent = new Intent(getApplicationContext(), OnBoarding.class);
+            });/*
+            Intent intent = new Intent(getApplicationContext(), OnBoarding.class);
             startActivity(intent);
             finish();*/
 
