@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PersonalSafetySystem</string>
+    <string name="app_name">PerSafety</string>
 
     <string name="first_slide_title">Search Your Location</string>
     <string name="second_slide_title">Make A Call</string>
