@@ -1,108 +1,113 @@
 package com.example.personalsafetysystem;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager2.widget.ViewPager2;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.example.personalsafetysystem.Adapters.SliderAdapter;
+import com.example.personalsafetysystem.Model.SlideModel;
 
+import java.util.ArrayList;
+import java.util.List;
 
 public class OnBoarding extends AppCompatActivity {
 
-    //Variables
-    ViewPager viewPager;
-    LinearLayout dotsLayout;
-    SliderAdapter sliderAdapter;
-    TextView[] dots;
-    Button letsGetStarted;
-    Animation animation;
-    int currentPos;
+    private ViewPager2 viewPager;
+    private Button nextButton;
+    private Button finishButton;
+    private Button skipButton;
+    private SliderAdapter onboardingAdapter;
+    private LinearLayout dotsLayout;
+    private ImageView[] dots;
+    private int currentPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_on_boarding);
 
-        //Hooks
-        viewPager = findViewById(R.id.slider);
-        dotsLayout = findViewById(R.id.dots);
-        letsGetStarted = findViewById(R.id.get_started_btn);
+        viewPager = findViewById(R.id.sliderViewPager);
+        nextButton = findViewById(R.id.next);
+        finishButton = findViewById(R.id.finish);
+        dotsLayout = findViewById(R.id.dotsLayout);
 
-        //Call adapter
-        sliderAdapter = new SliderAdapter(this);
-        viewPager.setAdapter(sliderAdapter);
+        List<SlideModel> slideModelList = new ArrayList<>();
+        slideModelList.add(new SlideModel(R.drawable.baseline_emergency_share_24,R.drawable.make_a_call, "Emergency notice", "Alert your acquaintances in case of danger, they will be able to see everything that happens through your camera. "));
+        slideModelList.add(new SlideModel(R.drawable.warning,R.drawable.search_place, "Incident areas", "Look on the map at the areas where incidents have been recorded by other users of the community."));
+        slideModelList.add(new SlideModel(R.drawable.share,R.drawable.add_missing_place, "Share experience", "Share with the users of the app the activity that you have carried out at any time and provide safe spaces in the community."));
 
-        //Dots
-        addDots(0);
-        viewPager.addOnPageChangeListener(changeListener);
-    }
+        onboardingAdapter = new SliderAdapter(slideModelList);
+        viewPager.setAdapter(onboardingAdapter);
 
-    public void skip(View view) {
-        startActivity(new Intent(this, UserDashboard.class));
-        finish();
-    }
+        addDots();
+        setCurrentDot(0);
 
-    public void next(View view) {
-        viewPager.setCurrentItem(currentPos + 1);
-    }
-
-    private void addDots(int position) {
-
-        dots = new TextView[4];
-        dotsLayout.removeAllViews();
-
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(35);
-
-            dotsLayout.addView(dots[i]);
-        }
-
-        if (dots.length > 0) {
-            dots[position].setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
-
-    }
-
-    ViewPager.OnPageChangeListener changeListener = new ViewPager.OnPageChangeListener() {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            addDots(position);
-            currentPos = position;
-
-            if (position == 0) {
-                letsGetStarted.setVisibility(View.INVISIBLE);
-            } else if (position == 1) {
-                letsGetStarted.setVisibility(View.INVISIBLE);
-            } else if (position == 2) {
-                letsGetStarted.setVisibility(View.INVISIBLE);
-            } else {
-                animation = AnimationUtils.loadAnimation(OnBoarding.this, R.anim.bottom_anim);
-                letsGetStarted.setAnimation(animation);
-                letsGetStarted.setVisibility(View.VISIBLE);
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                setCurrentDot(position);
+                currentPosition = position;
+                if (position == onboardingAdapter.getItemCount() - 1) {
+                    nextButton.setVisibility(View.GONE);
+                    finishButton.setVisibility(View.VISIBLE);
+                } else {
+                    nextButton.setVisibility(View.VISIBLE);
+                    finishButton.setVisibility(View.GONE);
+                }
             }
+        });
 
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentPosition < onboardingAdapter.getItemCount() - 1) {
+                    currentPosition++;
+                    viewPager.setCurrentItem(currentPosition);
+                }
+            }
+        });
+
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+    }
+
+    private void addDots() {
+        dots = new ImageView[onboardingAdapter.getItemCount()];
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new ImageView(this);
+            dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unselected_dot));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 0, 8, 0);
+            dotsLayout.addView(dots[i], params);
         }
+    }
 
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
+    private void setCurrentDot(int position) {
+        for (int i = 0; i < dots.length; i++) {
+            if (i == position) {
+                dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.selected_dot));
+            } else {
+                dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.unselected_dot));
+            }
         }
-    };
-
+    }
 }
+

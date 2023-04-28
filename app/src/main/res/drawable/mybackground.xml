@@ -3,22 +3,25 @@
         <color android:color="@android:color/transparent" />
     </item>
     <item>
-        <gradient
-            android:angle="180"
-            android:startColor="#00FFFFFF"
-            android:endColor="#B3FFFFFF"
-            android:type="linear" />
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#80822A79"
+                android:endColor="#B3FFFFFF"
+                android:type="linear"
+                android:angle="135"/>
+            <gradient
+                android:startColor="#B3FFFFFF"
+                android:centerColor="#809C40B9"
+                android:endColor="#80822A79"
+                android:angle="90"/>
+            <corners
+                android:radius="0dp"/>
+
+        </shape>
+
     </item>
-    <item>
-        <gradient
-            android:angle="135"
-            android:startColor="#80822A79"
-            android:endColor="#809C40B9"
-            android:type="linear" />
-    </item>
-    <item>
-        <bitmap
-            android:src="@drawable/myimage"
-            android:gravity="center" />
-    </item>
+
 </layer-list>
+
+
+

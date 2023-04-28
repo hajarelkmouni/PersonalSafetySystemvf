@@ -23,7 +23,6 @@
         android:layout_width="323dp"
         android:layout_height="41dp"
         android:layout_marginTop="32dp"
-        android:background="@drawable/btn_bg"
         android:text="Logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.556"

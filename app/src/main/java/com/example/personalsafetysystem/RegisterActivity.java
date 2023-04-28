@@ -6,12 +6,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.personalsafetysystem.LoginActivity;
+import com.example.personalsafetysystem.MainActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -19,10 +22,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    TextView txtSignIn;
-    EditText edtFullName, edtEmail, edtMobile, edtPassword, edtConfirmPassword;
-    Button btnSignUp;
+
+    EditText textEmail, textPassword, edtConfirmPassword;
+    TextView login;
     String txtFullName, txtEmail, txtMobile, txtPassword, txtConfirmPassword;
+
+    Button btnSignUpAcc;
+
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     private FirebaseAuth mAuth;
 
@@ -31,16 +37,19 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        txtSignIn = findViewById(R.id.txtSignIn);
-        edtEmail = findViewById(R.id.edtSignUpEmail);
-        edtPassword = findViewById(R.id.edtSignUpPassword);
-        edtConfirmPassword = findViewById(R.id.edtSignUpConfirmPassword);
-        btnSignUp = findViewById(R.id.btnSignUp);
+
+        login = findViewById(R.id.login);
+        textEmail = findViewById(R.id.textEmail);
+        textPassword = findViewById(R.id.textPassword);
+        edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
+
+        btnSignUpAcc = findViewById(R.id.btnSignUpAcc);
+
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
-        txtSignIn.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
@@ -49,11 +58,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        btnSignUpAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtEmail = edtEmail.getText().toString().trim();
-                txtPassword = edtPassword.getText().toString().trim();
+                txtEmail = textEmail.getText().toString().trim();
+                txtPassword = textPassword.getText().toString().trim();
                 txtConfirmPassword = edtConfirmPassword.getText().toString().trim();
 
                 if (!TextUtils.isEmpty(txtEmail)) {
@@ -69,14 +78,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 edtConfirmPassword.setError("Confirm Password Field can't be empty");
                             }
                         } else {
-                            edtPassword.setError("Password Field can't be empty");
+                            textPassword.setError("Password Field can't be empty");
                         }
 
                     } else {
-                        edtEmail.setError("Enter a valid Email Address");
+                        textEmail.setError("Enter a valid Email Address");
                     }
                 } else {
-                    edtEmail.setError("Email Field can't be empty");
+                    textEmail.setError("Email Field can't be empty");
                 }
 
 
@@ -86,7 +95,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void SignUpUser() {
-        btnSignUp.setVisibility(View.INVISIBLE);
+
+        btnSignUpAcc.setVisibility(View.INVISIBLE);
 
         mAuth.createUserWithEmailAndPassword(txtEmail, txtPassword).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
@@ -101,7 +111,8 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(RegisterActivity.this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                btnSignUp.setVisibility(View.VISIBLE);
+
+                btnSignUpAcc.setVisibility(View.VISIBLE);
             }
         });
 

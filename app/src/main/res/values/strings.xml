@@ -5,6 +5,8 @@
     <string name="second_slide_title">Make A Call</string>
     <string name="third_slide_title">Add Missing Place</string>
     <string name="fourth_slide_title">Sit Back And Enjoy</string>
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
 
 
     <string name="first_slide_desc">You can search any place nearby or with-in the specified city. We will display specific or all related shops to match your search. </string>
